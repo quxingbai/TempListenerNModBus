@@ -25,7 +25,7 @@ namespace TempListenerNModBus
     {
         private class MainPageViewModel : IDisposable, INotifyPropertyChanged
         {
-            public class LogData
+            public class LogDataVm
             {
                 public double Temp { get; set; }
                 public double Humid { get; set; }
@@ -38,6 +38,37 @@ namespace TempListenerNModBus
 
 
                 public bool IsHightTemp => Temp > 30;
+
+                public LogDataVm()
+                {
+
+                }
+                public LogDataVm(LocalLogData ld)
+                {
+                    this.Date = ld.Date;
+                    this.Temp = ld.Temp;
+                    this.Humid = ld.Humid;
+                    this.Sun = ld.Sun;
+                    this.IsHeating = ld.IsHeating;
+                    this.IsHumid = ld.IsHumid;
+                    this.IsLighting = ld.IsLighting;
+                    this.Date = ld.Date;
+                }
+
+                public LocalLogData ToLocalLog()
+                {
+                    return new()
+                    {
+                        Date = this.Date,
+                        Humid = this.Humid,
+                        IsHeating=this.IsHeating,
+                        Temp=this.Temp,
+                        IsHumid=this.IsHumid,
+                        IsLighting=this.IsLighting,
+                        Sun=this.Sun
+                    };
+                }
+
             }
             public bool _HumidState { get; set; }
             public bool _HeatingState { get; set; }
@@ -72,8 +103,8 @@ namespace TempListenerNModBus
 
 
 
-            public ObservableCollection<LogData> Logs { get; set; } = new();
-
+            public ObservableCollection<LogDataVm> Logs { get; set; } = new();
+            public ObservableCollection<LogDataVm> LogLineData { get; set; } = new();
 
             private bool IsRunning = false;
 
@@ -82,6 +113,11 @@ namespace TempListenerNModBus
             public MainPageViewModel()
             {
                 IsRunning = true;
+                var localLogs = LocalDataManager.GetLogs(100);
+                foreach (var log in localLogs)
+                {
+                    LogLineData.Add(new LogDataVm(log));
+                }
                 CreateListenTask();
             }
 
@@ -100,7 +136,11 @@ namespace TempListenerNModBus
                     {
                         Logs.RemoveAt(0);
                     }
-                    var logdata = new LogData()
+                    if (LogLineData.Count > 0)
+                    {
+                        LogLineData.RemoveAt(0);
+                    }
+                    var logdata = new LogDataVm()
                     {
                         Date = DateTime.Now,
                         Humid = Humid,
@@ -111,7 +151,9 @@ namespace TempListenerNModBus
                         Sun = Sun
                     };
                     Logs.Add(logdata);
-                    
+                    LogLineData.Add(logdata);
+                    LocalDataManager.WriteLog(logdata.ToLocalLog());
+
                 });
 
             }
@@ -203,7 +245,7 @@ namespace TempListenerNModBus
                             SetHeatingState(false);
                             SetLightState(true);
                         }
-                         if(temp < 30)
+                        if (temp < 30)
                         {
                             SetLightState(false);
                         }

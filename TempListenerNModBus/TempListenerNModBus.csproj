@@ -12,4 +12,10 @@
     <PackageReference Include="NModbus" Version="3.0.81" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="QBlockData">
+      <HintPath>..\..\QBlockData\QBlockData\bin\Debug\net6.0\QBlockData.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
