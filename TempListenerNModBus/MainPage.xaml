@@ -1,0 +1,251 @@
+﻿<UserControl x:Class="TempListenerNModBus.MainPage"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TempListenerNModBus"
+             mc:Ignorable="d" 
+             xmlns:pubp="clr-namespace:TempListenerNModBus.Helpers"
+             xmlns:cc="clr-namespace:TempListenerNModBus.Controls"
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style TargetType="ContentControl" x:Key="CONTENT_IconControl">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ContentControl">
+                        <Border Padding="5" Margin="5" CornerRadius="2.5">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Border>
+                                    <ContentControl Content="{Binding }" />
+                                </Border>
+                                <Border Grid.Column="1">
+                                    <ContentPresenter HorizontalAlignment="Center"  VerticalAlignment="Center"/>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style TargetType="cc:IconTextBlock">
+            <Setter Property="Width" Value="70"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Margin" Value="10,5,40,5"/>
+        </Style>
+        <Style TargetType="ToggleButton">
+            <Setter Property="Background" Value="WhiteSmoke"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="DimGray"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="Foreground" Value="DimGray"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Margin" Value="15,0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ToggleButton">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border>
+                                <ContentPresenter Margin="10,5" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <Border Width="30" Height="15" Grid.Column="1" Padding="3" Background="{TemplateBinding Background}" CornerRadius="8">
+                                <Grid>
+                                    <Border Grid.Column="1" Background="White" CornerRadius="8" Width="10" HorizontalAlignment="Left" Name="BD_ToggleButtonContent">
+                                        <Grid>
+                                            <TextBlock FontSize="10" Name="TEXT_State" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                        </Grid>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <!--<Setter Property="TextBlock.Text" Value="开" TargetName="TEXT_State"/>-->
+                                <Setter Property="HorizontalAlignment" Value="Right" TargetName="BD_ToggleButtonContent"/>
+                                <Setter Property="Background" Value="Green"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <!--<Setter Property="TextBlock.Text" Value="关" TargetName="TEXT_State"/>-->
+                                <Setter Property="HorizontalAlignment" Value="Left" TargetName="BD_ToggleButtonContent"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border>
+                <StackPanel>
+                    <WrapPanel Margin="5">
+                        <cc:IconTextBlock Text="{Binding Temp}">
+                            <cc:IconTextBlock.Icon>
+                                <Border>
+                                    <Grid>
+                                        <Path Stretch="Uniform" Name="PATH_TempIcon" Fill="DodgerBlue" Data="M615.622 589.014V165.222c0-17.673-14.327-32-32-32H414.9c-17.673 0-32 14.327-32 32v425.62c-40.723 34.43-64.584 85.204-64.584 138.962 0 100.355 81.645 182 182 182s182-81.645 182-182c-0.001-54.925-24.643-106.364-66.694-140.79z m-115.307 258.79c-65.065 0-118-52.935-118-118 0-38.593 19.005-74.832 50.839-96.941A32.003 32.003 0 0 0 446.9 606.58V197.222h104.722v407.859a32 32 0 0 0 14.202 26.594c32.868 21.998 52.491 58.682 52.491 98.129 0 65.065-52.934 118-118 118z"/>
+                                        <Path Stretch="Uniform" Height="12" VerticalAlignment="Bottom" Margin="0,0,0,3" Fill="{Binding ElementName=PATH_TempIcon,Path=Fill}" Data="M516.315 670.423V466.785c0-8.836-7.164-16-16-16s-16 7.164-16 16v203.638c-26.765 7.069-46.5 31.438-46.5 60.424 0 34.518 27.982 62.5 62.5 62.5s62.5-27.982 62.5-62.5c0-28.986-19.735-53.355-46.5-60.424z"/>
+                                    </Grid>
+                                </Border>
+                            </cc:IconTextBlock.Icon>
+                        </cc:IconTextBlock>
+                        <cc:IconTextBlock Text="{Binding Humid}">
+                            <cc:IconTextBlock.Icon>
+                                <Border>
+                                    <Grid>
+                                        <Path Stretch="Uniform" Name="PATH_HumidIcon" Fill="DodgerBlue" Data="M512 17.066667C419.271111 17.066667 124.586667 369.777778 124.586667 609.848889c0 218.453333 174.08 397.084444 387.413333 397.084444 213.333333 0 387.413333-178.631111 387.413333-397.084444C899.413333 369.777778 604.728889 17.066667 512 17.066667z m313.457778 592.782222c0 177.493333-140.515556 321.991111-313.457778 321.991111s-313.457778-144.497778-313.457778-321.991111C198.542222 392.533333 459.093333 117.191111 512 93.297778c52.906667 23.893333 313.457778 299.235556 313.457778 516.551111z"/>
+                                        <Path Stretch="Uniform" Height="5" VerticalAlignment="Bottom" Margin="0,0,0,5" Fill="{Binding ElementName=PATH_HumidIcon,Path=Fill}" Data="M383.431111 621.226667c-5.12-13.653333-17.635556-23.893333-31.857778-26.168889s-29.582222 3.413333-38.684444 14.791111c-9.102222 11.377778-11.377778 27.306667-6.257778 40.96a327.111111 327.111111 0 0 0 192.284445 191.146667 41.415111 41.415111 0 0 0 54.613333-32.426667 40.96 40.96 0 0 0-26.737778-46.08c-65.991111-23.893333-117.76-76.231111-143.36-142.222222z"/>
+                                    </Grid>
+                                </Border>
+                            </cc:IconTextBlock.Icon>
+                        </cc:IconTextBlock>
+                        <cc:IconTextBlock Text="{Binding Sun}">
+                            <cc:IconTextBlock.Icon>
+                                <Border>
+                                    <Grid>
+                                        <Path Stretch="Uniform" Name="PATH_SunIcon" Fill="DodgerBlue" Data="M512.000213 733.353497c-122.06857 0-221.353283-99.284713-221.353283-221.353284S389.931643 290.64693 512.000213 290.64693 733.353497 389.931643 733.353497 512.000213 634.026117 733.353497 512.000213 733.353497z m0-357.373767A136.148482 136.148482 0 0 0 375.97973 512.000213 136.148482 136.148482 0 0 0 512.000213 648.020697 136.148482 136.148482 0 0 0 648.020697 512.000213 136.148482 136.148482 0 0 0 512.000213 375.97973zM554.666613 171.735673A42.154403 42.154403 0 0 1 512.000213 213.335413c-23.551853 0-42.6664-18.645217-42.6664-41.59974V41.603153A42.154403 42.154403 0 0 1 512.000213 0.003413c23.551853 0 42.6664 18.645217 42.6664 41.59974v130.13252zM554.666613 982.397273A42.154403 42.154403 0 0 1 512.000213 1023.997013c-23.594519 0-42.6664-18.687883-42.6664-41.59974v-130.175186A42.111737 42.111737 0 0 1 512.000213 810.665013c23.551853 0 42.6664 18.60255 42.6664 41.59974v130.13252zM171.735673 469.333813c22.954523 0 41.59974 19.114547 41.59974 42.6664 0 23.594519-18.645217 42.6664-41.59974 42.6664H41.603153A42.154403 42.154403 0 0 1 0.003413 512.000213c0-23.551853 18.645217-42.6664 41.59974-42.6664h130.13252zM982.397273 469.333813c22.954523 0 41.59974 19.114547 41.59974 42.6664 0 23.594519-18.687883 42.6664-41.59974 42.6664h-130.175186A42.111737 42.111737 0 0 1 810.665013 512.000213c0-23.551853 18.60255-42.6664 41.59974-42.6664h130.13252zM241.239239 722.430898a42.06907 42.06907 0 0 1 59.562294 0.767995 42.111737 42.111737 0 0 1 0.767996 59.562295l-92.031425 92.074091a42.154403 42.154403 0 0 1-59.562295-0.853328 42.154403 42.154403 0 0 1-0.767995-59.562294l92.031425-91.988759zM814.462323 149.207814a42.154403 42.154403 0 0 1 59.562294 0.767995 42.154403 42.154403 0 0 1 0.767996 59.562295l-92.031425 92.031425a42.06907 42.06907 0 0 1-59.562295-0.767996 42.111737 42.111737 0 0 1-0.810661-59.562294l92.074091-92.031425zM241.239239 301.526862a42.19707 42.19707 0 0 0 59.604961-0.725329 42.111737 42.111737 0 0 0 0.767995-59.562294L209.538104 149.122481a42.154403 42.154403 0 0 0-59.562295 0.853328 42.111737 42.111737 0 0 0-0.767995 59.562295l92.031425 91.988758zM814.462323 874.792613a42.111737 42.111737 0 0 0 59.562294-0.810662 42.154403 42.154403 0 0 0 0.767996-59.562294l-92.031425-92.031425a42.06907 42.06907 0 0 0-59.562295 0.767995 42.111737 42.111737 0 0 0-0.810661 59.562294l92.074091 92.074092z"/>
+                                    </Grid>
+                                </Border>
+                            </cc:IconTextBlock.Icon>
+                        </cc:IconTextBlock>
+                        <ToggleButton IsChecked="{Binding HeatingState,Mode=OneWay}" Content="加热器"/>
+                        <ToggleButton IsChecked="{Binding HumidState,Mode=OneWay}" Content="加湿器"/>
+                        <ToggleButton IsChecked="{Binding LightState,Mode=OneWay}" Content="警报灯"/>
+
+                        <ContentControl Width="50" Height="25" Margin="10,0" Opacity="0">
+                            <ContentControl.Template>
+                                <ControlTemplate TargetType="ContentControl">
+                                    <Border Background="{TemplateBinding Background}" CornerRadius="5">
+                                        <TextBlock Text="过热" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding LightState}" Value="True">
+                                            <Setter Property="Background" Value="Red"/>
+                                            <DataTrigger.EnterActions>
+                                                <BeginStoryboard>
+                                                    <Storyboard>
+                                                        <DoubleAnimation RepeatBehavior="Forever" Duration="0:0:0.25" To="0.8" From="0.2" Storyboard.TargetProperty="Opacity" AutoReverse="True" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </DataTrigger.EnterActions>
+                                        </DataTrigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </ContentControl.Template>
+                        </ContentControl>
+                    </WrapPanel>
+                </StackPanel>
+            </Border>
+            <Border Grid.Row="1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Border Height="150">
+                        <cc:RangeValueDrawMap BigValue="30" SmallValue="10"  ItemsSource="{Binding Logs}" ValuePath="Temp"/>
+                    </Border>
+                    <Border Grid.Row="1">
+                        <ListBox FocusVisualStyle="{x:Null}"  ItemsSource="{Binding Logs}" BorderThickness="0" Background="Transparent" ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                            <ListBox.Template>
+                                <ControlTemplate TargetType="ListBox">
+                                    <Border>
+
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <Border>
+                                                <Border Padding="5" Background="{TemplateBinding Background}">
+                                                    <Grid>
+                                                        <UniformGrid Columns="5" Rows="1">  
+                                                            <UniformGrid.Resources>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                                                    <Setter Property="FontWeight" Value="Bold"/>
+                                                                    <Setter Property="FontSize" Value="15" />
+                                                                    <Setter Property="Foreground" Value="DimGray"/>
+                                                                </Style>
+                                                            </UniformGrid.Resources>
+                                                            <TextBlock Text="温度"/>
+                                                            <TextBlock Text="湿度"/>
+                                                            <TextBlock Text="太阳光"/>
+                                                            <TextBlock Text="时间"/>
+                                                        </UniformGrid>
+                                                    </Grid>
+                                                </Border>
+                                            </Border>
+                                            <Border Grid.Row="1">
+                                                <ItemsPresenter/>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+                                </ControlTemplate>
+                            </ListBox.Template>
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="ListBoxItem">
+                                                <Border Padding="5" Background="{TemplateBinding Background}">
+                                                    <Grid>
+                                                        <UniformGrid Columns="5" Rows="1">
+                                                            <UniformGrid.Resources>
+                                                                <Style TargetType="TextBlock">
+                                                                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                                                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                                                </Style>
+                                                            </UniformGrid.Resources>
+                                                            <TextBlock Text="{Binding Temp}"/>
+                                                            <TextBlock Text="{Binding Humid}"/>
+                                                            <TextBlock Text="{Binding Sun}"/>
+                                                            <TextBlock >
+                                                                <Run Text="{Binding Date.Minute,Mode=OneWay}"/>
+                                                                <Run Text="分"/>
+                                                                <Run Text="{Binding Date.Second,Mode=OneWay}"/>
+                                                                <Run Text="秒"/>
+                                                            </TextBlock>
+                                                        </UniformGrid>
+                                                    </Grid>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="DodgerBlue"/>
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter Property="Background" Value="DodgerBlue"/>
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                    </Trigger>
+                                                    <DataTrigger Binding="{Binding IsHightTemp}" Value="True">
+                                                        <Setter Property="Background" Value="Red"/>
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                    </DataTrigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+
+                        </ListBox>
+                    </Border>
+                </Grid>
+            </Border>
+        </Grid>
+
+    </Grid>
+</UserControl>
