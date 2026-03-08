@@ -150,12 +150,23 @@
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <Border Height="150">
-                        <cc:RangeValueDrawMap BigValue="30" SmallValue="10"  ItemsSource="{Binding LogLineData}" ValuePath="Temp"/>
+                        <cc:RangeValueDrawMap BigValue="30" SmallValue="10"  ItemsSource="{Binding LogLineData}" ValuePath="{Binding ElementName=CB_DisplaySource,Path=SelectedItem.Tag}"/>
                     </Border>
-                    <Border Grid.Row="1">
+                    <Border Grid.Row="1" Margin="5">
+                        <WrapPanel>
+                            <TextBlock Text="绘制源" VerticalAlignment="Center" Margin="10,0" Foreground="DimGray" />
+                            <ComboBox Name="CB_DisplaySource" SelectedIndex="0">
+                                <ComboBoxItem Content="温度" Tag="Temp"/>
+                                <ComboBoxItem Content="湿度" Tag="Humid"/>
+                                <ComboBoxItem Content="阳光" Tag="Sun"/>
+                            </ComboBox>
+                        </WrapPanel>
+                    </Border>
+                    <Border Grid.Row="2">
                         <ListBox FocusVisualStyle="{x:Null}"  ItemsSource="{Binding Logs}" BorderThickness="0" Background="Transparent" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                             <ListBox.Template>
                                 <ControlTemplate TargetType="ListBox">

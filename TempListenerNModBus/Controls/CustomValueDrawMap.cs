@@ -65,11 +65,12 @@ namespace TempListenerNModBus.Controls
         private MemberItem ObjectToMember(object Source)
         {
             var st = Source.GetType();
-            double sourceValue = (double)st.GetProperty(this.ValuePath).GetValue(Source);
+            var prop = st.GetProperty(this.ValuePath);
+            double? sourceValue = (double?)prop?.GetValue(Source);
             object? selectedValue = st.GetProperty(this.DisplayPath)?.GetValue(Source);
             DateTime? selectedDate = st.GetProperty(this.DatePath)?.GetValue(Source) as DateTime?;
 
-            var item = new MemberItem(Source, selectedValue, sourceValue, selectedDate);
+            var item = new MemberItem(Source, selectedValue, sourceValue??0, selectedDate);
             return item;
         }
 
@@ -163,7 +164,7 @@ namespace TempListenerNModBus.Controls
 
 
                 drawingContext.DrawLine(wsp, new(rect.Left, y), new(rect.Right, y));
-                drawingContext.DrawText(CreatText(value.ToString(), Brushes.DodgerBlue,10), new(rect.Right, y));
+                drawingContext.DrawText(CreatText(value.ToString(), Brushes.DodgerBlue, 10), new(rect.Right, y));
             }
             foreach (MemberItem i in Members)
             {
@@ -171,15 +172,15 @@ namespace TempListenerNModBus.Controls
                 var point = GetValuePoint(i, index);
                 drawingContext.DrawLine(wsp, new Point(point.X, rect.Top), new(point.X, rect.Bottom));
                 drawingContext.DrawLine(pen, lastPoint ?? point, point);
-                if(Members.Count<100)
-                drawingContext.DrawText(CreatText(i.SourceValue.ToString(), Brushes.Gray,10), point);
+                if (Members.Count < 100)
+                    drawingContext.DrawText(CreatText(i.SourceValue.ToString(), Brushes.Gray, 10), point);
                 lastPoint = point;
                 index++;
             }
 
             base.OnRender(drawingContext);
         }
-        private FormattedText CreatText(string text, Brush brush,double fontSize)
+        private FormattedText CreatText(string text, Brush brush, double fontSize)
         {
             FormattedText ft = new(text, System.Globalization.CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new(""), fontSize, brush);
             return ft;

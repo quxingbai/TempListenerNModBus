@@ -113,7 +113,7 @@ namespace TempListenerNModBus
             public MainPageViewModel()
             {
                 IsRunning = true;
-                var localLogs = LocalDataManager.GetLogs(100);
+                var localLogs = LocalDataManager.GetLogs(200);
                 foreach (var log in localLogs)
                 {
                     LogLineData.Add(new LogDataVm(log));
@@ -152,7 +152,8 @@ namespace TempListenerNModBus
                     };
                     Logs.Add(logdata);
                     LogLineData.Add(logdata);
-                    LocalDataManager.WriteLog(logdata.ToLocalLog());
+                    //停止写入
+                    //LocalDataManager.WriteLog(logdata.ToLocalLog());
 
                 });
 
