@@ -1,3 +1,8 @@
+
+<img width="1205" height="941" alt="38b4599e-5ef1-4e1f-b932-84f95ba6d039" src="https://github.com/user-attachments/assets/4aa84019-c781-49ab-a30f-c5d7206fbf53" />
+
+
+
 Modbus学习项目
 项目1：智能温室监控系统（单个从站）
 难度：★☆☆☆☆
